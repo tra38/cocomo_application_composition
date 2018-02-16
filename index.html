@@ -9,6 +9,7 @@
 </head>
 <h3>The Application-Composition Model in COCOMO</h3>
 <div class="calculation">
+  <form>
   <h2>Calculate Application Points</h2>
   <p><input class="simple_screens" value="0">Number of "Simple" Screens</p>
   <p><input class="moderate_screens" value="0">Number of "Moderately Complex" Screens</p>
@@ -32,8 +33,8 @@
     <input class="productivity" type="radio" name="productivity" value="25">High<br>
 
     <input class="productivity" type="radio" name="productivity" value="50">Very High<br>
-  <p class="total-wrap"><input class="application_points_productivity" disabled> Application Points/Month</p>
-  <p><input class="code_reuse" value="0">How Much Code Will You Be Reusing, From 0% - 100%</input></p>
+    <p class="total-wrap"><input class="application_points_productivity" disabled> Application Points/Month</p>
+    <p><input class="code_reuse" value="0">How Much Code Will You Be Reusing, From 0% - 100%</input></p>
 
   <h2>Final Stats</h2>
 
@@ -44,15 +45,19 @@
   <p class="total-wrap"><input class="best_case_estimate" disabled>Best-Case Estimate (In Days)</p>
 
   <p class="total-wrap"><input class="worst_case_estimate" disabled>Worst-Case Estimate (In Days)</p>
+
+  </form>
 </div>
 <script>
-$("input[type=radio]").click(function() {
+$("input[type=radio]").on('change', function() {
     var total = 0;
     $("input[type=radio]:checked").each(function() {
         total += parseFloat($(this).val());
     });
 
     $(".application_points_productivity").val(total);
+    // force recalculation
+    $(".application_points_productivity").change();
 });
 
 $(".application_points_productivity").val(13);
@@ -66,6 +71,15 @@ $('.calculation').calculate('{{.suggested_estimate}} = ({{.estimated_application
 $('.calculation').calculate('{{.best_case_estimate}} = {{.suggested_estimate}} * 0.25');
 
 $('.calculation').calculate('{{.worst_case_estimate}} = {{.suggested_estimate}} * 4');
+
+$('.calculation input').on( 'input', function() {
+  //This would be called if any of the input element has got a change inside the form
+
+  // force recalcuation
+  $(this).change()
+});
+
+
 
 </script>
 </body>
