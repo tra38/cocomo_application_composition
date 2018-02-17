@@ -10,52 +10,52 @@
 </head>
 <h3>The Application-Composition Model in COCOMO</h3>
 <div class="calculation">
-  <form>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">
-          <h2>Calculate Application Points</h2>
-          <p><input class="simple_screens" value="0">Number of "Simple" Screens</p>
-          <p><input class="moderate_screens" value="0">Number of "Moderately Complex" Screens</p>
-          <p><input class="complex_screens" value="0">Number of "Very Complex" Screens</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <h2>Application Points</h2>
+        <p>"Simple" Screens<br><input class="simple_screens" value="0"></p>
+        <p>"Moderately Complex" Screens<input class="moderate_screens" value="0"></p>
+        <p>"Very Complex" Screens<input class="complex_screens" value="0"></p>
 
-          <p><input class="simple_reports" value="0">Number of "Simple" Reports</p>
-          <p><input class="moderate_reports" value="0">Number of "Moderately Complex" Reports</p>
-          <p><input class="complex_reports" value="0">Number of "Very Complex" Reports</p>
+        <p>"Simple" Reports<br><input class="simple_reports" value="0"></p>
+        <p>"Moderately Complex" Reports<input class="moderate_reports" value="0"></p>
+        <p>"Very Complex" Reports<input class="complex_reports" value="0"></p>
 
-          <p><input class="code_modules" value="0">Number of Code Modules Written In Imperative Languages</p>
+        <p>Code Modules Written In Imperative Languages<br><input class="code_modules" value="0"></p>
+      </div>
+      <div class="col-sm">
+        <h2>Productivity</h2>
+        <p>Rate Your Producitivty (Skill + Experience + CASE Capabilities)
+          <br>
+          <input class="productivity" type="radio" name="productivity" value="4">Very Low<br>
+          <input class="productivity" type="radio" name="productivity" value="7">Low<br>
 
-          <p class="total-wrap"><input class="application_points" disabled> Total Application Points</p>
-        </div>
-        <div class="col-sm">
-          <h2>Calculate Programmer Productivity</h2>
-          <p>Rate Your Producitivty (Skill + Experience + CASE Capabilities)
-            <br>
-            <input class="productivity" type="radio" name="productivity" value="4">Very Low<br>
-            <input class="productivity" type="radio" name="productivity" value="7">Low<br>
+          <input class="productivity" type="radio" name="productivity" value="13" checked>Nominal<br>
 
-            <input class="productivity" type="radio" name="productivity" value="13" checked>Nominal<br>
+          <input class="productivity" type="radio" name="productivity" value="25">High<br>
 
-            <input class="productivity" type="radio" name="productivity" value="25">High<br>
+          <input class="productivity" type="radio" name="productivity" value="50">Very High<br>
 
-            <input class="productivity" type="radio" name="productivity" value="50">Very High<br>
-            <p class="total-wrap"><input class="application_points_productivity" disabled> Application Points/Month</p>
-            <p><input class="code_reuse" value="0">How Much Code Will You Be Reusing, From 0% - 100%</input></p>
-        </div>
-        <div class="col-sm">
-          <h2>Final Stats</h2>
+          <p>How Much Code Will You Be Reusing, From 0% - 100%<br><input class="code_reuse" value="0"></input></p>
+      </div>
+      <div class="col-sm">
+        <h2>Final Stats</h2>
 
-          <p class="total-wrap"><input class="estimated_application_points" disabled>Total Application Points (Minus Code Reuse)</p>
+        <p class="total-wrap">Application Points/Month<input class="application_points_productivity" disabled></p>
 
-          <p class="total-wrap"><input class="suggested_estimate" disabled>Suggested Project Estimate (In Days)</p>
+        <p class="total-wrap">Total Application Points<input class="application_points" disabled></p>
 
-          <p class="total-wrap"><input class="best_case_estimate" disabled>Best-Case Estimate (In Days)</p>
+        <p class="total-wrap">Total Application Points (Minus Code Reuse)<input class="estimated_application_points" disabled></p>
 
-          <p class="total-wrap"><input class="worst_case_estimate" disabled>Worst-Case Estimate (In Days)</p>
-        </div>
+        <p class="total-wrap">Suggested Project Estimate (In Days)<input class="suggested_estimate" disabled></p>
+
+        <p class="total-wrap">Best-Case Estimate (In Days)<input class="best_case_estimate" disabled></p>
+
+        <p class="total-wrap">Worst-Case Estimate (In Days)<input class="worst_case_estimate" disabled></p>
       </div>
     </div>
-  </form>
+  </div>
 </div>
 <script>
 $("input[type=radio]").on('change', function() {
