@@ -3,9 +3,15 @@
 <head>
 <meta charset="utf-8">
 <title>Untitled Document</title>
-<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.2.0/math.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/4.0.1/math.js"></script>
+
+<!-- bootstrap files -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <script src="calculate.jquery.js"></script>
 </head>
 <h3>The Application-Composition Model in COCOMO</h3>
@@ -48,11 +54,22 @@
 
         <p class="total-wrap">Total Application Points (Minus Code Reuse)<input class="estimated_application_points" disabled></p>
 
-        <p class="total-wrap">Suggested Project Estimate (In Days)<input class="suggested_estimate" disabled></p>
+        <p class="total-wrap">Project Effort Estimate (In Person-Months)
+          <br><input class="work_estimate" disabled></p>
 
-        <p class="total-wrap">Best-Case Estimate (In Days)<input class="best_case_estimate" disabled></p>
+        <p class="total-wrap">Project Effort Estimate (In Person-Days)
+          <br><input class="work_estimate_days" disabled></p>
+      </div>
 
-        <p class="total-wrap">Worst-Case Estimate (In Days)<input class="worst_case_estimate" disabled></p>
+      <div class="col-sm">
+        <h2><a href="#" data-toggle="tooltip" title="Calendar estimates differ from 'project effort' since you can have multiple people working on the same project.">Calendar Estimates</a></h2>
+        <p class="total-wrap"><a href="#" data-toggle="tooltip" data-html="true" title="<code>Normal-Case * 0.25</code>">Best-Case Estimate</a> (In Days)<input class="best_case_estimate" disabled></p>
+
+        <p class="total-wrap">Normal-Case Estimate (In Days)<input class="suggested_estimate" disabled></p>
+
+        <p class="total-wrap"><a href="#" data-toggle="tooltip" data-html="true" title="<code>Normal-Case * 4</code>">Worst-Case Estimate</a> (In Days)<input class="worst_case_estimate" disabled></p>
+
+        <p class="total-wrap"><a href="#" data-toggle="tooltip" data-html="true" title="Developed by Ken Norton in his presentation 'Leading Cross-Functional Teams'. The formula is <code>(Best-Case + (Normal-Case * 4) + Worst-Case) / 6</code>.">Ken Norton's Estimate</a> (In Days)<input class="ken_norton_estimate" disabled></p>
       </div>
     </div>
   </div>
@@ -69,17 +86,34 @@ $("input[type=radio]").on('change', function() {
     $(".application_points_productivity").change();
 });
 
+var useFixedFormatting = function (result) {
+  return result.toFixed(2);
+};
+
+var outputFormatter = function (result) {
+  return useFixedFormatting(result);
+}
+
 $(".application_points_productivity").val(13);
 
-$('.calculation').calculate('{{.application_points}} = {{.simple_screens}} + (2 * {{.moderate_screens}}) + (3 * {{.complex_screens}}) + (2 * {{.simple_reports}}) + (5 * {{.moderate_reports}}) + (8 * {{.complex_reports}}) + (10 * {{.code_modules}})');
+$('.calculation').calculate('{{.application_points}} = {{.simple_screens}} + (2 * {{.moderate_screens}}) + (3 * {{.complex_screens}}) + (2 * {{.simple_reports}}) + (5 * {{.moderate_reports}}) + (8 * {{.complex_reports}}) + (10 * {{.code_modules}})', { outputFormatter: outputFormatter });
 
-$('.calculation').calculate('{{.estimated_application_points}} = {{.application_points}} * (1 - ({{.code_reuse}}/100))');
+$('.calculation').calculate('{{.estimated_application_points}} = {{.application_points}} * (1 - ({{.code_reuse}}/100))', { outputFormatter: outputFormatter });
 
-$('.calculation').calculate('{{.suggested_estimate}} = ({{.estimated_application_points}}/{{.application_points_productivity}}) * 30');
+$('.calculation').calculate('{{.work_estimate}} = (({{.estimated_application_points}}/{{.application_points_productivity}}))', { outputFormatter: outputFormatter });
 
-$('.calculation').calculate('{{.best_case_estimate}} = {{.suggested_estimate}} * 0.25');
+$('.calculation').calculate('{{.work_estimate_days}} = ({{.work_estimate}} * 30)', { outputFormatter: outputFormatter });
 
-$('.calculation').calculate('{{.worst_case_estimate}} = {{.suggested_estimate}} * 4');
+$('.calculation').calculate('{{.suggested_estimate}} = 3 * pow({{.work_estimate}},0.332) * 30', { outputFormatter: outputFormatter });
+
+$('.calculation').calculate('{{.best_case_estimate}} = {{.suggested_estimate}} * 0.25', { outputFormatter: outputFormatter });
+
+$('.calculation').calculate('{{.worst_case_estimate}} = {{.suggested_estimate}} * 4', { outputFormatter: outputFormatter });
+
+
+// (O + (L * 4) + P) / 6
+
+$('.calculation').calculate('{{.ken_norton_estimate}} = ({{.best_case_estimate}} + ({{.suggested_estimate}} * 4) + {{.worst_case_estimate}})/6', { outputFormatter: outputFormatter });
 
 $('.calculation input').on( 'input', function() {
   //This would be called if any of the input element has got a change inside the form
@@ -89,6 +123,9 @@ $('.calculation input').on( 'input', function() {
 });
 
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 </script>
 </body>
